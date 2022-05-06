@@ -35,7 +35,8 @@ def generate_json_file(categorie, titre, url):
             question_dict["titre"] = question["question"]
             question_dict["choix"] = []
             for ch in question["propositions"]:
-                question_dict["choix"].append((ch, ch == question["réponse"]))
+                question_dict["choix"].append(ch)
+            question_dict["réponse"] = question["réponse"]
             out_questions_data.append(question_dict)
         out_questionnaire_data["questions"] = out_questions_data
         out_json = json.dumps(out_questionnaire_data)

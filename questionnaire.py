@@ -18,6 +18,8 @@
 #
 #    - lancer()
 #
+import json
+
 
 class Question:
     def __init__(self, titre, choix, bonne_reponse):
@@ -27,24 +29,24 @@ class Question:
 
     def FromData(data):
         # ....
-        q = Question(data[2], data[0], data[1])
+        q = Question(data["titre"], data["choix"], data["réponse"])
         return q
 
     def poser(self):
         print("QUESTION")
         print("  " + self.titre)
         for i in range(len(self.choix)):
-            print("  ", i+1, "-", self.choix[i])
+            print("  ", i + 1, "-", self.choix[i])
 
         print()
         resultat_response_correcte = False
         reponse_int = Question.demander_reponse_numerique_utlisateur(1, len(self.choix))
-        if self.choix[reponse_int-1].lower() == self.bonne_reponse.lower():
+        if self.choix[reponse_int - 1].lower() == self.bonne_reponse.lower():
             print("Bonne réponse")
             resultat_response_correcte = True
         else:
             print("Mauvaise réponse")
-            
+
         print()
         return resultat_response_correcte
 
@@ -59,7 +61,8 @@ class Question:
         except:
             print("ERREUR : Veuillez rentrer uniquement des chiffres")
         return Question.demander_reponse_numerique_utlisateur(min, max)
-    
+
+
 class Questionnaire:
     def __init__(self, questions):
         self.questions = questions
@@ -73,27 +76,11 @@ class Questionnaire:
         return score
 
 
-"""questionnaire = (
-    ("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"), 
-    ("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-    ("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-                )
+json_data = open("animaux_leschats_confirme.json", "r")
+data = json.loads(json_data.read())
+question_data = data["questions"]
+questions = []
+for question in question_data:
+    questions.append(Question.FromData(question))
 
-lancer_questionnaire(questionnaire)"""
-
-# q1 = Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris")
-# q1.poser()
-
-# data = (("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris", "Quelle est la capitale de la France ?")
-# q = Question.FromData(data)
-# print(q.__dict__)
-
-Questionnaire(
-    (
-    Question("Quelle est la capitale de la France ?", ("Marseille", "Nice", "Paris", "Nantes", "Lille"), "Paris"), 
-    Question("Quelle est la capitale de l'Italie ?", ("Rome", "Venise", "Pise", "Florence"), "Rome"),
-    Question("Quelle est la capitale de la Belgique ?", ("Anvers", "Bruxelles", "Bruges", "Liège"), "Bruxelles")
-    )
-).lancer()
-
-
+Questionnaire(questions).lancer()
