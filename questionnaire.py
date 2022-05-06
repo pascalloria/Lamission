@@ -30,25 +30,29 @@ def FromData(json_data):
     # Affiche le sujet du Questionnaire
     print(f"Sujet : {data['titre']}")
     print("")
-
-    question_data = data["questions"]
-    print(f"{len(question_data)} questions")
+    #affiche le nombre total de question
+    print(f"{len(data['questions'])} questions")
     print("")
-    questions = []
+    # initialise le compteur de question
     n_question = 0
-    for question in question_data:
+    #creer la liste des questions
+    questions = []
+    for question in data["questions"]:
+        # incrémente le compteur de question
         n_question += 1
-        questions.append(Question(question["titre"], question["choix"], question["réponse"],len(question_data),n_question))
+        #remplis la liste des questions
+        questions.append(
+            Question(question["titre"], question["choix"], question["réponse"], len(data["questions"]), n_question))
     return questions
 
+
 class Question:
-    def __init__(self, titre, choix, bonne_reponse,nb_tot_question,n_question):
+    def __init__(self, titre, choix, bonne_reponse, nb_tot_question, n_question):
         self.titre = titre
         self.choix = choix
         self.bonne_reponse = bonne_reponse
-        self.n_question=n_question
-        self.nb_tot_question=nb_tot_question
-
+        self.n_question = n_question
+        self.nb_tot_question = nb_tot_question
 
     def poser(self):
         print(f"QUESTION -- n°{self.n_question}/{self.nb_tot_question}")
