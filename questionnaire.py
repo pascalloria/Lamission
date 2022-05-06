@@ -22,7 +22,8 @@ import json
 import sys
 
 
-def FromData(json_data):
+def FromData(json_ch):
+    json_data=open(json_ch,"r")
     # Charge le fichier JSON
     data = json.loads(json_data.read())
     # Affiche la catégorie et la difficulté
@@ -56,7 +57,7 @@ class Question:
         self.nb_tot_question = nb_tot_question
 
     def poser(self):
-        #affiche la question ainsi que sa numérotation
+        # affiche la question ainsi que sa numérotation
         print(f"QUESTION -- n°{self.n_question}/{self.nb_tot_question}")
         print("  " + self.titre)
         for i in range(len(self.choix)):
@@ -73,7 +74,7 @@ class Question:
         else:
             print("Mauvaise réponse")
         print()
-        #renvoie si la réponse est correcte ou non
+        # renvoie si la réponse est correcte ou non
         return resultat_response_correcte
 
     def demander_reponse_numerique_utlisateur(min, max):
@@ -103,8 +104,12 @@ class Questionnaire:
         print("Score final :", score, "sur", len(self.questions))
         return score
 
+
 # Chemin du fichier JSON contenant le questionnaire
-json_data = open("animaux_leschats_debutant.json", "r")
+if len(sys.argv) > 1:
+    json_ch = sys.argv[1]
+else:
+    json_ch = "animaux_leschats_confirme.json"
 
 # lancement du questionnaire
-Questionnaire(FromData(json_data)).lancer()
+Questionnaire(FromData(json_ch)).lancer()
