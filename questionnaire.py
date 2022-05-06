@@ -21,22 +21,37 @@
 import json
 
 
+def FromData(json_data):
+    # Charge le fichier JSON
+    data = json.loads(json_data.read())
+    # Affiche la catégorie et la difficulté
+    print(f"CATEGORIE : {data['categorie']}  DIFFICULTE : {data['difficulte']}")
+    print("")
+    # Affiche le sujet du Questionnaire
+    print(f"Sujet : {data['titre']}")
+    print("")
+
+    question_data = data["questions"]
+    print(f"{len(question_data)} questions")
+    print("")
+    questions = []
+    n_question = 0
+    for question in question_data:
+        n_question += 1
+        questions.append(Question(question["titre"], question["choix"], question["réponse"],len(question_data),n_question))
+    return questions
+
 class Question:
-    def __init__(self, titre, choix, bonne_reponse):
+    def __init__(self, titre, choix, bonne_reponse,nb_tot_question,n_question):
         self.titre = titre
         self.choix = choix
         self.bonne_reponse = bonne_reponse
+        self.n_question=n_question
+        self.nb_tot_question=nb_tot_question
 
-    def FromData(json_data):
-        data = json.loads(json_data.read())
-        question_data = data["questions"]
-        questions = []
-        for question in question_data:
-            questions.append(Question(question["titre"], question["choix"], question["réponse"]))
-        return questions
 
     def poser(self):
-        print("QUESTION")
+        print(f"QUESTION -- n°{self.n_question}/{self.nb_tot_question}")
         print("  " + self.titre)
         for i in range(len(self.choix)):
             print("  ", i + 1, "-", self.choix[i])
@@ -81,5 +96,4 @@ class Questionnaire:
 
 json_data = open("animaux_leschats_confirme.json", "r")
 
-
-Questionnaire(Question.FromData(json_data)).lancer()
+Questionnaire(FromData(json_data)).lancer()
