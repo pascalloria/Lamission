@@ -27,10 +27,13 @@ class Question:
         self.choix = choix
         self.bonne_reponse = bonne_reponse
 
-    def FromData(data):
-        # ....
-        q = Question(data["titre"], data["choix"], data["réponse"])
-        return q
+    def FromData(json_data):
+        data = json.loads(json_data.read())
+        question_data = data["questions"]
+        questions = []
+        for question in question_data:
+            questions.append(Question(question["titre"], question["choix"], question["réponse"]))
+        return questions
 
     def poser(self):
         print("QUESTION")
@@ -77,10 +80,6 @@ class Questionnaire:
 
 
 json_data = open("animaux_leschats_confirme.json", "r")
-data = json.loads(json_data.read())
-question_data = data["questions"]
-questions = []
-for question in question_data:
-    questions.append(Question.FromData(question))
 
-Questionnaire(questions).lancer()
+
+Questionnaire(Question.FromData(json_data)).lancer()
