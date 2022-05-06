@@ -19,6 +19,7 @@
 #    - lancer()
 #
 import json
+import sys
 
 
 def FromData(json_data):
@@ -30,17 +31,17 @@ def FromData(json_data):
     # Affiche le sujet du Questionnaire
     print(f"Sujet : {data['titre']}")
     print("")
-    #affiche le nombre total de question
+    # affiche le nombre total de question
     print(f"{len(data['questions'])} questions")
     print("")
     # initialise le compteur de question
     n_question = 0
-    #creer la liste des questions
+    # creer la liste des questions
     questions = []
     for question in data["questions"]:
         # incrémente le compteur de question
         n_question += 1
-        #remplis la liste des questions
+        # remplis la liste des questions
         questions.append(
             Question(question["titre"], question["choix"], question["réponse"], len(data["questions"]), n_question))
     return questions
@@ -55,21 +56,24 @@ class Question:
         self.nb_tot_question = nb_tot_question
 
     def poser(self):
+        #affiche la question ainsi que sa numérotation
         print(f"QUESTION -- n°{self.n_question}/{self.nb_tot_question}")
         print("  " + self.titre)
         for i in range(len(self.choix)):
             print("  ", i + 1, "-", self.choix[i])
 
         print()
+        # demande une réponse numérique a l'utilisateur
         resultat_response_correcte = False
         reponse_int = Question.demander_reponse_numerique_utlisateur(1, len(self.choix))
+        # Determine si la réponse donné est correcte ou non
         if self.choix[reponse_int - 1].lower() == self.bonne_reponse.lower():
             print("Bonne réponse")
             resultat_response_correcte = True
         else:
             print("Mauvaise réponse")
-
         print()
+        #renvoie si la réponse est correcte ou non
         return resultat_response_correcte
 
     def demander_reponse_numerique_utlisateur(min, max):
@@ -90,14 +94,17 @@ class Questionnaire:
         self.questions = questions
 
     def lancer(self):
+        # initialisation du compteur score
         score = 0
         for question in self.questions:
             if question.poser():
+                # incrementation du compteur score
                 score += 1
         print("Score final :", score, "sur", len(self.questions))
         return score
 
+# Chemin du fichier JSON contenant le questionnaire
+json_data = open("animaux_leschats_debutant.json", "r")
 
-json_data = open("animaux_leschats_confirme.json", "r")
-
+# lancement du questionnaire
 Questionnaire(FromData(json_data)).lancer()
