@@ -23,7 +23,7 @@ import sys
 
 
 def FromData(json_ch):
-    json_data=open(json_ch,"r")
+    json_data = open(json_ch, "r")
     # Charge le fichier JSON
     data = json.loads(json_data.read())
     # Affiche la catégorie et la difficulté
@@ -106,8 +106,19 @@ class Questionnaire:
 
 
 # Chemin du fichier JSON contenant le questionnaire
+
+# on regarde si un argument à été donné lors du lancement
 if len(sys.argv) > 1:
-    json_ch = sys.argv[1]
+    # si oui  on verifie que l'argument est bien un fichier qui s'ouvre.
+    try:
+        fichier = open(sys.argv[1], "r")
+        fichier.close()
+        # l'argument deviens le chemin du fichier
+        json_ch = sys.argv[1]
+    except:
+        print("ERREUR : Pas de fichier trouvé sur ce chemin")
+        sys.exit()
+
 else:
     json_ch = "animaux_leschats_confirme.json"
 
