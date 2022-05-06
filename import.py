@@ -3,12 +3,11 @@ import json
 import unicodedata
 
 open_quizz_db_data = (
-    ("Animaux", "Les chats", "https://www.kiwime.com/oqdb/files/1050828847/OpenQuizzDB_050/openquizzdb_50.json"),
-    ("Arts", "Musée du Louvre", "https://www.kiwime.com/oqdb/files/1086624389/OpenQuizzDB_086/openquizzdb_86.json"),
-    ("Bande dessinnée", "Tintin", "https://www.kiwime.com/oqdb/files/2124627384/OpenQuizzDB_124/openquizzdb_124.json"),
-    ("Cinéma", "Alien", "https://www.kiwime.com/oqdb/files/3241454997/OpenQuizzDB_241/openquizzdb_241.json"),
-    ("Cinéma", "Star wars", "https://www.kiwime.com/oqdb/files/1090993427/OpenQuizzDB_090/openquizzdb_90.json"),
-)
+    ("Animaux", "Les chats", "https://www.kiwime.com/oqdb/files/1050634995/OpenQuizzDB_050/openquizzdb_50.json"),
+    ("Arts", "Musée du Louvre", "https://www.kiwime.com/oqdb/files/1086347284/OpenQuizzDB_086/openquizzdb_86.json"),
+    ("Bande dessinnée", "Tintin", "https://www.kiwime.com/oqdb/files/2124242395/OpenQuizzDB_124/openquizzdb_124.json"),
+    ("Cinéma", "Alien", "https://www.kiwime.com/oqdb/files/3241985774/OpenQuizzDB_241/openquizzdb_241.json"),
+    ("Cinéma", "Star wars", "https://www.kiwime.com/oqdb/files/1090973384/OpenQuizzDB_090/openquizzdb_90.json"))
 
 
 def strip_accents(s):
@@ -16,7 +15,9 @@ def strip_accents(s):
 
 
 def get_quizz_filename(categorie, titre, difficulte):
-    return strip_accents(categorie).lower().replace(" ", "") + "_" + strip_accents(titre).lower().replace(" ", "") + "_" + strip_accents(difficulte).lower().replace(" ", "") + ".json"
+    return strip_accents(categorie).lower().replace(" ", "") + "_" + strip_accents(titre).lower().replace(" ",
+                                                                                                          "") + "_" + strip_accents(
+        difficulte).lower().replace(" ", "") + ".json"
 
 
 def generate_json_file(categorie, titre, url):
@@ -34,7 +35,7 @@ def generate_json_file(categorie, titre, url):
             question_dict["titre"] = question["question"]
             question_dict["choix"] = []
             for ch in question["propositions"]:
-                question_dict["choix"].append((ch, ch==question["réponse"]))
+                question_dict["choix"].append((ch, ch == question["réponse"]))
             out_questions_data.append(question_dict)
         out_questionnaire_data["questions"] = out_questions_data
         out_json = json.dumps(out_questionnaire_data)
@@ -47,4 +48,3 @@ def generate_json_file(categorie, titre, url):
 
 for quizz_data in open_quizz_db_data:
     generate_json_file(quizz_data[0], quizz_data[1], quizz_data[2])
-
