@@ -1,32 +1,23 @@
-# PROJET QUESTIONNAIRE V3 : POO
-#
-# - Pratiquer sur la POO
-# - Travailler sur du code existant
-# - Mener un raisonnement
-#
-# -> Définir les entitées (données, actions)
-#
-# Question
-#    - titre       - str
-#    - choix       - (str)
-#    - bonne_reponse   - str
-#
-#    - poser()  -> bool
-#
-# Questionnaire
-#    - questions      - (Question)
-#
-#    - lancer()
-#
+#La mission
+
 import json
 import sys
 
 
-def FromData(json_ch):
+def fromData(json_ch):
     json_data = open(json_ch, "r")
     # Charge le fichier JSON
     data = json.loads(json_data.read())
     # Affiche la catégorie et la difficulté
+    if not data.get('categorie'):
+        data['categorie'] = "inconnue"
+    if not data.get('difficulte'):
+        data['difficulte'] = "inconnue"
+    if not data.get('titre'):
+        return None
+    if not data.get('questions'):
+        return None
+
     print(f"CATEGORIE : {data['categorie']}  DIFFICULTE : {data['difficulte']}")
     print("")
     # Affiche le sujet du Questionnaire
@@ -45,7 +36,7 @@ def FromData(json_ch):
         # remplis la liste des questions
         questions.append(
             Question(question["titre"], question["choix"], question["réponse"], len(data["questions"]), n_question))
-    return questions
+    return questions,data
 
 
 class Question:
@@ -108,19 +99,20 @@ class Questionnaire:
 # Chemin du fichier JSON contenant le questionnaire
 
 # on regarde si un argument à été donné lors du lancement
-if len(sys.argv) > 1:
-    # si oui  on verifie que l'argument est bien un fichier qui s'ouvre.
-    try:
-        fichier = open(sys.argv[1], "r")
-        fichier.close()
-        # l'argument deviens le chemin du fichier
-        json_ch = sys.argv[1]
-    except:
-        print("ERREUR : Pas de fichier trouvé sur ce chemin")
-        sys.exit()
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        # si oui  on verifie que l'argument est bien un fichier qui s'ouvre.
+        try:
+            fichier = open(sys.argv[1], "r")
+            fichier.close()
+            # l'argument deviens le chemin du fichier
+            json_ch = sys.argv[1]
+        except:
+            print("ERREUR : Pas de fichier trouvé sur ce chemin")
+            sys.exit()
 
-else:
-    json_ch = "animaux_leschats_confirme.json"
+    else:
+        json_ch = "animaux_leschats_confirme.json"
 
-# lancement du questionnaire
-Questionnaire(FromData(json_ch)).lancer()
+    # lancement du questionnaire
+    Questionnaire(fromData(json_ch)[0]).lancer()
