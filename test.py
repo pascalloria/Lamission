@@ -55,21 +55,21 @@ class TestQuestion(unittest.TestCase):
 
 class TestQuestionnaire(unittest.TestCase):
     def test_questionnaire_lancer_alien_debutant(self):
-        filename=os.path.join("test_data","cinema_alien_expert.json")
-        q=questionnaire.fromData(filename)
+        filename = os.path.join("test_data", "cinema_alien_expert.json")
+        q = questionnaire.fromData(filename)
         self.assertIsNotNone(q)
-        #questionnaire.Questionnaire(q).lancer()
-        #nb de questions
-        self.assertEqual(len(q[0]),30)
+        # questionnaire.Questionnaire(q).lancer()
+        # nb de questions
+        self.assertEqual(len(q[0]), 30)
         # titre
-        self.assertEqual(q[1]['titre'],"Alien")
+        self.assertEqual(q[1]['titre'], "Alien")
         # categorie,
         self.assertEqual(q[1]['categorie'], "Cin\u00e9ma")
         # difficulté
         self.assertEqual(q[1]['difficulte'], "expert")
         # score si l'utilisateur repond "1" a chaque fois
-        with patch("builtins.input",return_value="1"):
-            self.assertEqual(questionnaire.Questionnaire(q[0]).lancer(),9)
+        with patch("builtins.input", return_value="1"):
+            self.assertEqual(questionnaire.Questionnaire(q[0]).lancer(), 9)
 
     def test_format_invalide(self):
         filename = os.path.join("test_data", "cinema_alien_expert_invalide.json")
@@ -87,19 +87,21 @@ class TestQuestionnaire(unittest.TestCase):
         q = questionnaire.fromData(filename)
         self.assertIsNone(q)
 
+
 class TestImportQuestionnaire(unittest.TestCase):
     def test_import_format_json(self):
-        questionnaire_import.generate_json_file("Animaux", "Les chats", "https://www.kiwime.com/oqdb/files/1050634995/OpenQuizzDB_050/openquizzdb_50.json")
+        questionnaire_import.generate_json_file("Animaux", "Les chats",
+                                                "https://www.kiwime.com/oqdb/files/1050634995/OpenQuizzDB_050/openquizzdb_50.json")
 
-        filenames=("animaux_leschats_confirme.json","animaux_leschats_debutant.json","animaux_leschats_expert.json")
+        filenames = ("animaux_leschats_confirme.json", "animaux_leschats_debutant.json", "animaux_leschats_expert.json")
 
         for filename in filenames:
             self.assertTrue(os.path.isfile(filename))
-            file=open(filename,"r")
-            json_data=file.read()
+            file = open(filename, "r")
+            json_data = file.read()
             file.close()
             try:
-                data=json.loads(json_data)
+                data = json.loads(json_data)
             except:
                 self.fail(f"Probleme de désérialisation pour le fichier{filename}")
             # titre
@@ -114,13 +116,12 @@ class TestImportQuestionnaire(unittest.TestCase):
             for question in data["questions"]:
                 # titre
                 self.assertIsNotNone(question.get("titre"))
-                #choix
+                # choix
                 self.assertIsNotNone(question.get("choix"))
                 # réponse
                 self.assertIsNotNone(question.get("réponse"))
                 # une seule bonne réponse
-                self.assertNotIsInstance(question["réponse"],tuple)
-
+                self.assertNotIsInstance(question["réponse"], tuple)
 
 
 unittest.main()
